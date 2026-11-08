@@ -2604,7 +2604,7 @@ const SCENE_DOC={
 };
 
 /* ---- 힌트: 가만히 있으면 지금 봐야 할 곳이 은은하게 깜박인다 ---- */
-const HINT_DELAY=6000;                       // 아무것도 안 누르고 이 시간(ms)이 지나면 힌트가 나타난다. 0이면 바로, 아주 크게 하면 사실상 끔.
+const HINT_DELAY=4000;                       // 아무것도 안 누르고 이 시간(ms)이 지나면 힌트가 나타난다. 0이면 바로, 아주 크게 하면 사실상 끔.
 const has=k=>game.inventory.includes(k),seen=k=>!!game.seen[k],FL=()=>game.flags;
 function curStage(){                            // 지금 진행 단계에서 다음에 봐야 할 대상
   if(FL().phoneState===0)return !seen('phoneOn')?'phone':(!seen('birthday')?'calendar':'phone');
