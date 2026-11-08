@@ -2855,7 +2855,7 @@ function render(name,sc){
   });
   { const hn=HINTS[name]?HINTS[name]():null;if(hn)later(()=>showHint(name,hn),HINT_DELAY) }
   if(isEnding){
-    later(()=>{ctrl.appendChild(mk('div','endlabel',ENDING_LABEL[name]));ctrl.appendChild(button('해설집 보기',()=>showCommentary(name),'btn accent'));ctrl.appendChild(button('후기 남기기',()=>window.open('https://forms.gle/NozwrLzqj3hXRE7SA','_blank'),'btn sub'));ctrl.appendChild(button('처음부터 다시 하기',()=>go('__restart'),'btn sub'))},4200);
+    later(()=>{ctrl.appendChild(mk('div','endlabel',ENDING_LABEL[name]));ctrl.appendChild(button('해설집 보기',()=>showCommentary(name),'btn accent'));ctrl.appendChild(button('후기 남기기',()=>window.open('https://forms.gle/NozwrLzqj3hXRE7SA','_blank'),'btn'));ctrl.appendChild(button('처음부터 다시 하기',()=>go('__restart'),'btn'))},4200);
   }
   if(sc.special==='menual'){
     ctrl.innerHTML='';
@@ -3013,7 +3013,7 @@ function showCommentary(endName){
   docEl.onscroll=upd;upd();
   setDialog('');
   ctrl.innerHTML='';
-  ctrl.appendChild(button('후기 남기기',()=>window.open('https://forms.gle/NozwrLzqj3hXRE7SA','_blank'),'btn sub'));
+  ctrl.appendChild(button('후기 남기기',()=>window.open('https://forms.gle/NozwrLzqj3hXRE7SA','_blank'),'btn'));
   ctrl.appendChild(button('처음부터 다시 하기',()=>go('__restart'),'btn accent'));
 }
 
@@ -3049,7 +3049,7 @@ function showProfile(){                                   // 수첩에 적어둔
   setDialog('...머리가 아프다.');
   ctrl.innerHTML='';
   ctrl.appendChild(button('눈을 뜬다',()=>go('start'),'btn accent'));
-  ctrl.appendChild(button('돌아간다',showTitle,'btn sub'));
+  ctrl.appendChild(button('돌아간다',showTitle,'btn'));
 }
 window.addEventListener('resize',()=>{if(artName==='title')setArt('title')});
 
