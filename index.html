@@ -618,7 +618,7 @@ newsletterEmail: {
 
     '공존 협정' 체결 100주년 기념식 개최
 
-    정부는 오는 3월 20일부터 전국 주요 도시에서 '공존 협정 체결 10주년' 기념 행사를 개최한다고 밝혔습니다.
+    정부는 오는 3월 20일부터 전국 주요 도시에서 '공존 협정 체결 100주년' 기념 행사를 개최한다고 밝혔습니다.
 
     행사에서는 협정 체결 당시의 역사 자료와 양 종족이 함께 이뤄낸 사회 발전 사례가 전시되며,
     ■■■ 누구나 무료로 관람할 수 있습니다.
@@ -626,7 +626,7 @@ newsletterEmail: {
 
     정부 관계자는
 
-    "지난 10년간 인간과 ■■■는 상호 존중과 신뢰를 바탕으로 평화로운 사회를 만들어 왔다."
+    "지난 100년간 인간과 ■■■는 상호 존중과 신뢰를 바탕으로 평화로운 사회를 만들어 왔다."
 
     라며,
 
@@ -2050,6 +2050,15 @@ const px=(x,y,c)=>r(x,y,1,1,c);
 function ring(cx,cy,rad,c,th=1){for(let y=-rad;y<=rad;y++)for(let x=-rad;x<=rad;x++){const d=Math.sqrt(x*x+y*y);if(d<=rad+.3&&d>=rad-th+.3)px(cx+x,cy+y,c)}}
 function disc(cx,cy,rad,c){for(let y=-rad;y<=rad;y++)for(let x=-rad;x<=rad;x++)if(x*x+y*y<=rad*rad+rad*.4)px(cx+x,cy+y,c)}
 function rect(x,y,w,h,c){r(x,y,w,1,c);r(x,y+h-1,w,1,c);r(x,y,1,h,c);r(x+w-1,y,1,h,c)}
+function hashE(i){const s=Math.sin(i*12.9898+4.1414)*43758.5453;return s-Math.floor(s)}
+function pupilOffset(t){
+  const period=6,mx=9,my=3;
+  const idx=Math.floor(t/period),frac=(t%period)/period;
+  const rx0=(hashE(idx*17+3)*2-1)*mx,ry0=(hashE(idx*19+7)*2-1)*my;
+  const rx1=(hashE((idx+1)*17+3)*2-1)*mx,ry1=(hashE((idx+1)*19+7)*2-1)*my;
+  const e=frac<0.3?(frac/0.3):1;
+  return [rx0+(rx1-rx0)*e, ry0+(ry1-ry0)*e];
+}
 
 // 3x5 도트 폰트 (숫자/일부 영문)
 const FONT={'0':'111101101101111','1':'010110010010111','2':'111001111100111','3':'111001111001111','4':'101101111001001',
@@ -2349,7 +2358,7 @@ ART.elevatorOpen=(t,ex)=>{
 };
 ART.cage=(t,ex)=>{
   const bad=ex.bad;
-  r(0,0,W,72,bad?'#1a0808':'#05050a');
+  r(0,0,W,H,bad?'#1a0808':'#05050a');
   // 거대한 형체
   const body=bad?'#8a7c82':'#7c7c88';
   r(22,10,52,60,body);r(28,2,40,24,body);r(16,30,8,40,body);r(72,30,8,40,body);
@@ -2358,6 +2367,75 @@ ART.cage=(t,ex)=>{
   for(let x=4;x<W;x+=8)r(x,0,3,72,'#9a9aa8');r(0,48,W,3,'#9a9aa8');r(0,20,W,3,'#9a9aa8');
   // 작은 사람(JACK)
   person(45,56,true);
+};
+ART.eyeEnding=(t)=>{
+  r(0,0,W,H,'#020202');
+  const cx=48,cy=34,ballR=30;
+  const eyeHalfW=23,upperLidH=15,lowerLidH=14,irisR=11,pupilR=4;
+  const [ox,oy]=pupilOffset(t);
+  const icx=cx+ox,icy=cy+oy;
+
+  const bgrad=g.createRadialGradient(cx-ballR*0.35,cy-ballR*0.35,ballR*0.1,cx,cy,ballR*1.15);
+  bgrad.addColorStop(0,'rgba(235,235,235,0.95)');
+  bgrad.addColorStop(0.5,'rgba(190,190,190,0.95)');
+  bgrad.addColorStop(0.85,'rgba(120,120,120,0.9)');
+  bgrad.addColorStop(1,'rgba(40,40,40,0.9)');
+  g.fillStyle=bgrad;g.beginPath();g.arc(cx,cy,ballR,0,Math.PI*2);g.fill();
+
+  g.save();
+  g.beginPath();
+  g.moveTo(cx-eyeHalfW,cy);
+  g.quadraticCurveTo(cx,cy-upperLidH,cx+eyeHalfW,cy);
+  g.quadraticCurveTo(cx,cy+lowerLidH,cx-eyeHalfW,cy);
+  g.closePath();g.clip();
+  const sock=g.createRadialGradient(icx,icy,irisR*0.5,cx,cy,eyeHalfW*0.9);
+  sock.addColorStop(0,'rgba(0,0,0,0)');
+  sock.addColorStop(1,'rgba(0,0,0,0.3)');
+  g.fillStyle=sock;g.fillRect(0,0,W,H);
+
+  const ig=g.createRadialGradient(icx,icy,pupilR*0.8,icx,icy,irisR);
+  ig.addColorStop(0,'rgba(135,135,135,0.95)');
+  ig.addColorStop(0.5,'rgba(90,90,90,0.95)');
+  ig.addColorStop(1,'rgba(45,45,45,0.95)');
+  g.fillStyle=ig;g.beginPath();g.arc(icx,icy,irisR,0,Math.PI*2);g.fill();
+
+  g.save();g.beginPath();g.arc(icx,icy,irisR,0,Math.PI*2);g.clip();
+  const N=60;
+  for(let i=0;i<N;i++){
+    const ang=(i/N)*Math.PI*2+hashE(i*13)*0.03;
+    const rStart=pupilR*0.95+hashE(i*7)*1.1;
+    const rEnd=irisR*(0.6+hashE(i*11)*0.4);
+    const xA=icx+Math.cos(ang)*rStart,yA=icy+Math.sin(ang)*rStart;
+    const xB=icx+Math.cos(ang)*rEnd,yB=icy+Math.sin(ang)*rEnd;
+    const bright=0.25+hashE(i*23)*0.55;
+    const gv=Math.round(180*bright+40);
+    g.strokeStyle='rgba('+gv+','+gv+','+gv+',0.85)';
+    g.lineWidth=0.3+hashE(i*29)*0.3;
+    g.beginPath();g.moveTo(xA,yA);g.lineTo(xB,yB);g.stroke();
+  }
+  g.strokeStyle='rgba(150,150,150,0.25)';g.lineWidth=0.3;
+  g.beginPath();g.arc(icx,icy,irisR*0.75,0,Math.PI*2);g.stroke();
+  for(let c=0;c<7;c++){
+    const ca=hashE(c*41)*Math.PI*2;
+    const cr2=irisR*(0.5+hashE(c*43)*0.4);
+    const cx2=icx+Math.cos(ca)*cr2,cy2=icy+Math.sin(ca)*cr2;
+    const sz=0.5+hashE(c*47)*1.1;
+    g.fillStyle='rgba(10,10,10,'+(0.3+hashE(c*53)*0.4)+')';
+    g.beginPath();g.ellipse(cx2,cy2,sz,sz*0.7,ca,0,Math.PI*2);g.fill();
+  }
+  g.restore();
+  g.restore();
+
+  g.fillStyle='rgba(2,2,2,0.98)';
+  g.beginPath();g.arc(icx,icy,pupilR,0,Math.PI*2);g.fill();
+
+  g.fillStyle='rgba(255,255,255,0.5)';
+  g.beginPath();g.ellipse(icx-2.2,icy-2.6,0.9,1.3,0.3,0,Math.PI*2);g.fill();
+
+  const hcx=cx,hcy=H+4,hrx=14,hry=11;
+  const hg2=g.createRadialGradient(hcx,hcy-hry*0.6,1,hcx,hcy,hrx*1.3);
+  hg2.addColorStop(0,'rgba(95,95,95,0.95)');hg2.addColorStop(1,'rgba(10,10,10,0.95)');
+  g.fillStyle=hg2;g.beginPath();g.ellipse(hcx,hcy,hrx,hry,0,0,Math.PI*2);g.fill();
 };
 ART.inventory=()=>{
   r(0,0,W,72,C.floor);r(0,0,W,72,C.wall2);
@@ -2500,10 +2578,20 @@ function drawArt(){
   g.setTransform(S,0,0,S,0,0);g.imageSmoothingEnabled=false;
   fn(artTick,artExtra);
   g.setTransform(1,0,0,1,0,0);
-  if(artName!=='title')postBlocks(lvl);
+  if(artName!=='title'&&artName!=='eyeEnding')postBlocks(lvl);
   vignette(lvl);
   ditherOut(lvl);
   glitch(artName==='title'?.55:lvl);
+  if(artName==='eyeEnding'){
+    const [ox,oy]=pupilOffset(artTick);
+    const rx=(48+ox)*S,ry=(34+oy)*S,rr=4*S*1.3;
+    const rg=out.createRadialGradient(rx,ry,0,rx,ry,rr);
+    rg.addColorStop(0,'rgba(205,25,20,0.9)');
+    rg.addColorStop(0.5,'rgba(150,12,10,0.5)');
+    rg.addColorStop(1,'rgba(150,12,10,0)');
+    out.fillStyle=rg;
+    out.beginPath();out.arc(rx,ry,rr,0,Math.PI*2);out.fill();
+  }
   drawCrisp(lvl);
   if(artName==='title'){                                   // 제목은 작고 선명하게 (디더링을 거치지 않음)
     const Hc=sc.height/S,cy=Math.round(Hc*.4),cell=2,pitch=6,word='MINIMALISM';
@@ -2593,7 +2681,7 @@ const SCENE_ART={
   store:'store',counter:'counter',counter2:'counter',notMenual:'counter',menual:'counter',salesPassword:'counter',storepasswordFail:'counter',sales:'shelf',sales2:'shelf',pen:'shelf',
   storeOut:'watch',office:'office',gate:'gate',gateNoId:'gate',jackGate:'gateOpen',jungwonGate:'gateOpen',
   jackElevator:'elevatorIn',H_no:'elevatorIn',jungwonElevator:'elevatorIn',B_no:'elevatorIn',
-  elevatorOpen1:'elevatorOpen',elevatorOpen2:'elevatorOpen',elevatorOpen3:'elevatorOpen',happyEnding:'cage',badEnding:'cage',inventory:'inventory'
+  elevatorOpen1:'elevatorOpen',elevatorOpen2:'elevatorOpen',elevatorOpen3:'elevatorOpen',happyEnding:'eyeEnding',badEnding:'eyeEnding',inventory:'inventory'
 };
 // 장면 → 문서(실제 텍스트가 있는 화면). 값 = 문서 스타일
 const SCENE_DOC={
@@ -2604,7 +2692,7 @@ const SCENE_DOC={
 };
 
 /* ---- 힌트: 가만히 있으면 지금 봐야 할 곳이 은은하게 깜박인다 ---- */
-const HINT_DELAY=4000;                       // 아무것도 안 누르고 이 시간(ms)이 지나면 힌트가 나타난다. 0이면 바로, 아주 크게 하면 사실상 끔.
+const HINT_DELAY=6000;                       // 아무것도 안 누르고 이 시간(ms)이 지나면 힌트가 나타난다. 0이면 바로, 아주 크게 하면 사실상 끔.
 const has=k=>game.inventory.includes(k),seen=k=>!!game.seen[k],FL=()=>game.flags;
 function curStage(){                            // 지금 진행 단계에서 다음에 봐야 할 대상
   if(FL().phoneState===0)return !seen('phoneOn')?'phone':(!seen('birthday')?'calendar':'phone');
